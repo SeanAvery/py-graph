@@ -26,8 +26,9 @@ class WeightedGraph():
 def create_random_node():
     # creates random 16 byte address
     identity = codecs.encode(os.urandom(16), 'hex').decode()
-
-    return (identity)
+    # create random weight in a flat distribution 0-999
+    weight = random.randint(0, 999)
+    return (identity, weight)
 
 def create_random_edge():
     '''
