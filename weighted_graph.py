@@ -1,6 +1,8 @@
 import os
 import codecs
 import random
+import hashlib
+import binascii
 
 class WeightedGraph():
     '''Weighted graph data structure with advanced interface... hopefully'''
@@ -8,6 +10,7 @@ class WeightedGraph():
     def __init__(self):
         self.nodes = []
         self.edges = []
+        self.edge_space = []
         total_weight = 0
 
     def put_node(self, node):
@@ -15,6 +18,7 @@ class WeightedGraph():
             appends node/s to node list
             node is either a single edge tuple or list of tuples
         '''
+
         self.nodes.append(node)
 
     def put_edge(self, edge):
@@ -24,6 +28,11 @@ class WeightedGraph():
         '''
         assert len(self.nodes) > 2
         self.edges.append(edge)
+
+    # def increase_edge_space(self, new_node):
+    #     '''
+    #         creates edge space for edge connections between new_node and existing nodes
+    #     '''
 
     def create_random_node(self):
         # creates random 16 byte address
@@ -49,15 +58,38 @@ class WeightedGraph():
         node2 = temp_nodes[position2]
         return (node1[0], node2[0])
 
+    def create_random_edges(self, num_edges):
+        '''
+            creates random edges
+            edges is an integer value
+        '''
+        # make sure enough possible edges
+        num_nodes = len(self.nodes)
+        max_num_edges = num_nodes * (num_nodes - 1) / 2
+        assert num_edges <= max_num_edges
+        # temporary node list !!! mutable !!!
+        temp_nodes = self.nodes
+        for i in range(num_edges):
+            position = random.randint(0, len(temp_nodes) - 1)
+            node = temp_nodes[position]
+            temp_nodes
+
+    def get_permutation_hash(self, node1, node2):
+        # cannot form a permutation between the same node
+        assert node1 != node2
+        # alpha-numerical comparison of node hashes
+        if node1[0] < node2[0]:
+            concat_node = node2[0] + node1[0]
+        else:
+            concat_node = node1[0] + node2[0]
+        return hashlib.sha256(concat_node.encode('utf8')).hexdigest()
+
+
 ### testing!
 
 graph = WeightedGraph()
 random_node1 = graph.create_random_node()
-print('random_node1', random_node1)
 graph.put_node(random_node1)
 random_node2 = graph.create_random_node()
-print('random_node2', random_node2)
 graph.put_node(random_node2)
-print('nodes', graph.nodes)
-random_edge = graph.create_random_edge()
-print('random_edge', random_edge)
+graph.get_permutation_hash(random_node1, random_node2)
