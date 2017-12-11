@@ -2,7 +2,6 @@ import os
 import codecs
 import random
 import hashlib
-import binascii
 
 class WeightedGraph():
     '''Weighted graph data structure with advanced interface... hopefully'''
@@ -18,7 +17,7 @@ class WeightedGraph():
             appends node/s to node list
             node is either a single edge tuple or list of tuples
         '''
-
+        self.increase_edge_space(node)
         self.nodes.append(node)
 
     def put_edge(self, edge):
@@ -29,10 +28,13 @@ class WeightedGraph():
         assert len(self.nodes) > 2
         self.edges.append(edge)
 
-    # def increase_edge_space(self, new_node):
-    #     '''
-    #         creates edge space for edge connections between new_node and existing nodes
-    #     '''
+    def increase_edge_space(self, new_node):
+        '''
+            creates edge space for edge connections between new_node and existing nodes
+        '''
+        for node in self.nodes:
+            edge_hash = self.get_permutation_hash(new_node, node)
+            self.edge_space.append(edge_hash)
 
     def create_random_node(self):
         # creates random 16 byte address
@@ -75,6 +77,9 @@ class WeightedGraph():
             temp_nodes
 
     def get_permutation_hash(self, node1, node2):
+        '''
+            creates unique hash from two nodes
+        '''
         # cannot form a permutation between the same node
         assert node1 != node2
         # alpha-numerical comparison of node hashes
@@ -92,4 +97,6 @@ random_node1 = graph.create_random_node()
 graph.put_node(random_node1)
 random_node2 = graph.create_random_node()
 graph.put_node(random_node2)
-graph.get_permutation_hash(random_node1, random_node2)
+random_node3 = graph.create_random_node()
+graph.put_node(random_node3)
+print(graph.edge_space)
