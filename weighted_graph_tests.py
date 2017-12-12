@@ -12,8 +12,7 @@ def create_random_graph(graph, num_nodes, num_edges):
     for i in range(num_nodes):
         node = graph.create_random_node()
         graph.put_node(node)
-    print(graph.nodes)
-    # graph.create_random_edges(num_edges)
+    graph.create_random_edges(num_edges)
     # assert len(graph.available_edges) == max_edges - num_edges
     # assert len(graph.edges) == num_edges
     cprint('### test #1: create_random_graph is passing all 2 tests', 'green')

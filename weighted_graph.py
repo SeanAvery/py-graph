@@ -10,6 +10,7 @@ class WeightedGraph():
         self.nodes = []
         self.edges = []
         self.edge_space = []
+        self.available_edges = []
         total_weight = 0
 
     def put_node(self, node):
@@ -27,6 +28,7 @@ class WeightedGraph():
         '''
         assert len(self.nodes) > 2
         self.edges.append(edge)
+        self.available_edges.remove(edge)
 
     def increase_edge_space(self, new_node):
         '''
@@ -35,6 +37,7 @@ class WeightedGraph():
         for node in self.nodes:
             edge_hash = self.get_permutation_hash(new_node, node)
             self.edge_space.append(edge_hash)
+            self.available_edges.append(edge_hash)
 
     def create_random_node(self):
         # creates random 16 byte address
@@ -43,38 +46,16 @@ class WeightedGraph():
         weight = random.randint(0, 999)
         return (identity, weight)
 
-    def create_random_edge(self):
-        '''
-            picks to random nodes and forms an edge between them
-        '''
-        # make sure there are at least 2 edges
-        assert len(self.nodes) >= 2
-        # temporary node list !!! mutable !!!
-        temp_nodes = self.nodes
-        # get one node from list
-        position1 = random.randint(0, len(temp_nodes) - 1)
-        node1 = temp_nodes[position1]
-        temp_nodes.remove(node1)
-        # get second node from list
-        position2 = random.randint(0, len(temp_nodes) - 1)
-        node2 = temp_nodes[position2]
-        return (node1[0], node2[0])
-
     def create_random_edges(self, num_edges):
         '''
             creates random edges
-            edges is an integer value
+            num_edges is an integer value
         '''
-        # make sure enough possible edges
-        num_nodes = len(self.nodes)
-        max_num_edges = num_nodes * (num_nodes - 1) / 2
-        assert num_edges <= max_num_edges
-        # temporary node list !!! mutable !!!
-        temp_nodes = self.nodes
-        for i in range(num_edges):
-            position = random.randint(0, len(temp_nodes) - 1)
-            node = temp_nodes[position]
-            temp_nodes
+        assert len(self.nodes) >= 2
+        assert num_edges <= len(self.available_edges)
+        for _ in range(num_edges):
+            new_edge = random.choice(self.available_edges)
+            self.put_edge(new_edge)
 
     def get_permutation_hash(self, node1, node2):
         '''
@@ -91,12 +72,12 @@ class WeightedGraph():
 
 
 ### testing!
-
-graph = WeightedGraph()
-random_node1 = graph.create_random_node()
-graph.put_node(random_node1)
-random_node2 = graph.create_random_node()
-graph.put_node(random_node2)
-random_node3 = graph.create_random_node()
-graph.put_node(random_node3)
-print(graph.edge_space)
+#
+# graph = WeightedGraph()
+# random_node1 = graph.create_random_node()
+# graph.put_node(random_node1)
+# random_node2 = graph.create_random_node()
+# graph.put_node(random_node2)
+# random_node3 = graph.create_random_node()
+# graph.put_node(random_node3)
+# print(graph.edge_space)
