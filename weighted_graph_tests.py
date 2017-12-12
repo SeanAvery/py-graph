@@ -1,5 +1,6 @@
 from weighted_graph import WeightedGraph
 from termcolor import cprint
+
 def run_tests():
     graph = WeightedGraph()
     # create a large random graph
@@ -13,9 +14,10 @@ def create_random_graph(graph, num_nodes, num_edges):
         node = graph.create_random_node()
         graph.put_node(node)
     graph.create_random_edges(num_edges)
-    # assert len(graph.available_edges) == max_edges - num_edges
-    # assert len(graph.edges) == num_edges
-    cprint('### test #1: create_random_graph is passing all 2 tests', 'green')
+    assert len(graph.available_edges) == max_edges - num_edges
+    assert len(graph.edges) == num_edges
+    cprint('### test #1: create_random_graph is passing all ', 'green')
+    graph.plot_graph()
 
 #### test #2
 

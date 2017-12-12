@@ -2,6 +2,10 @@ import os
 import codecs
 import random
 import hashlib
+import plotly
+from plotly.offline import iplot, plot
+
+from plotly.graph_objs import Scatter, Layout, Marker
 
 class WeightedGraph():
     '''Weighted graph data structure with advanced interface... hopefully'''
@@ -36,8 +40,8 @@ class WeightedGraph():
         '''
         for node in self.nodes:
             edge_hash = self.get_permutation_hash(new_node, node)
-            self.edge_space.append(edge_hash)
-            self.available_edges.append(edge_hash)
+            self.edge_space.append((edge_hash, new_node[0], node[0]))
+            self.available_edges.append(edge_hash, new_node[0], node[0])
 
     def create_random_node(self):
         # creates random 16 byte address
@@ -69,6 +73,27 @@ class WeightedGraph():
         else:
             concat_node = node1[0] + node2[0]
         return hashlib.sha256(concat_node.encode('utf8')).hexdigest()
+
+    def plot_graph(self):
+        x_coordinates = []
+        y_coordinates = []
+        for node in self.nodes:
+            x_coordinates.append(random.randint(0, 99))
+            y_coordinates.append(random.randint(0, 99))
+
+        node_trace = Scatter(
+            x = x_coordinates,
+            y = y_coordinates,
+            mode = 'markers'
+        )
+
+        edge_trace =
+
+        plotly.offline.plot({
+            "data": [node_trace],
+            "layout": Layout(title="hello world")
+        })
+
 
 
 ### testing!
