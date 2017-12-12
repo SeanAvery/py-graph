@@ -4,8 +4,7 @@ import random
 import hashlib
 import plotly
 from plotly.offline import iplot, plot
-
-from plotly.graph_objs import Scatter, Layout, Marker
+from plotly.graph_objs import Scatter, Layout, Marker, Line, Data, Figure
 
 class WeightedGraph():
     '''Weighted graph data structure with advanced interface... hopefully'''
@@ -40,8 +39,9 @@ class WeightedGraph():
         '''
         for node in self.nodes:
             edge_hash = self.get_permutation_hash(new_node, node)
-            self.edge_space.append((edge_hash, new_node[0], node[0]))
-            self.available_edges.append(edge_hash, new_node[0], node[0])
+            new_edge = (edge_hash, new_node[0], node[0])
+            self.edge_space.append(new_edge)
+            self.available_edges.append(new_edge)
 
     def create_random_node(self):
         # creates random 16 byte address
@@ -87,12 +87,43 @@ class WeightedGraph():
             mode = 'markers'
         )
 
-        edge_trace =
+        edge_trace = Scatter(
+            x=[],
+            y=[],
+            line=Line(width=1.0,color='#A9A9A9'),
+            hoverinfo='none',
+            mode='lines')
+        print(self.nodes)
 
-        plotly.offline.plot({
-            "data": [node_trace],
-            "layout": Layout(title="hello world")
-        })
+        for edge in self.edges:
+            node1 = [node for node in self.nodes if edge[1] in node]
+            index1 = self.nodes.index(node1[0])
+            x0 = x_coordinates[index1]
+            y0 = y_coordinates[index1]
+            node2 = [node for node in self.nodes if edge[1] in node]
+            index2 = self.nodes.index(node2[0])
+            x1 = x_coordinates[index2]
+            y1 = y_coordinates[index2]
+            edge_trace['x'] += [x0, x1, None]
+            edge_trace['y'] += [y0, y1, None]
+
+
+            fig = Figure(data=Data([edge_trace, node_trace]),
+                layout=Layout(
+                title='<br>Network graph made with Python',
+                titlefont=dict(size=16),
+                showlegend=False,
+                hovermode='closest',
+                margin=dict(b=20,l=5,r=5,t=40),
+                annotations=[ dict(
+                    text="Python code: <a href='https://plot.ly/ipython-notebooks/network-graphs/'> https://plot.ly/ipython-notebooks/network-graphs/</a>",
+                    showarrow=False,
+                    xref="paper", yref="paper",
+                    x=0.005, y=-0.002 ) ],
+                xaxis=XAxis(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=YAxis(showgrid=False, zeroline=False, showticklabels=False)))
+
+            plotly.offline.plot(fig, )
 
 
 
