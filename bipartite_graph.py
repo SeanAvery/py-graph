@@ -20,6 +20,15 @@ class BipartiteGraph():
         self.increase_edge_space(node, 1 - side)
         self.nodes[side].append(node)
 
+    def put_edge(self, edge):
+        '''
+            append to edge ledger
+            remove from available_edges
+        '''
+        assert len(self.nodes[0]) > 0 and len(self.nodes[1]) > 0
+        self.edges.append(edge)
+        self.available_edges.remove(edge)
+
     def increase_edge_space(self, node, side):
         '''
             creates new potential edge connetions
@@ -38,11 +47,21 @@ class BipartiteGraph():
         weight = random.randint(0, 999)
         return (identity, weight)
 
+    def create_random_nodes(self, num_nodes):
+        for _ in range(num_nodes):
+            new_node = self.create_random_node()
+            side = random.getrandbits(1)
+            self.put_node(new_node, side)
+
+    def create_random_edges(self, num_edges):
+        assert num_edges <= len(self.available_edges)
+        for _ in range(num_edges):
+            new_edge = random.choice(self.available_edges)
+            self.put_edge(new_edge)
+
 ### testing!
 graph = BipartiteGraph()
-node1 = graph.create_random_node()
-graph.put_node(node1, 0)
-node2 = graph.create_random_node()
-graph.put_node(node2, 1)
+graph.create_random_nodes(10)
+graph.create_random_edges(30)
 print(graph.nodes)
-print(graph.edge_space)
+print(graph.edges)
